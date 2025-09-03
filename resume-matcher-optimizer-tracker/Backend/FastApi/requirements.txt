@@ -1,0 +1,16 @@
+fastapi[all]
+uvicorn[standard]
+sqlalchemy 
+mysql-connector-python 
+python-multipart 
+alembic
+pydantic
+python-jose[cryptography]
+passlib[bcrypt]
+uuid
+PyPDF2
+boto3
+langchain-google-genai 
+langchain
+google.generativeai
+pinecone

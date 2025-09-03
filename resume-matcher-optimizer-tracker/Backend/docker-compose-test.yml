@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  fastapi-app:
+    build: ./FastApi
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./FastApi:/app  # Optional: mount code for live reload
+    environment:
+      - MYSQL_HOST=
+      - MYSQL_PORT=
+      - MYSQL_USER=
+      - MYSQL_PASSWORD=
+      - MYSQL_DATABASE=
+      - JWT_SECRET=
+      - JWT_ALGORITHM=
+      - S3_name=
+      - S3_region=
+      - S3_secret_key=
+      - S3_access_key=
+      - GOOGLE_API_KEY=
+      - PINECONE_API_KEY=
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - internal-network
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 
+      MYSQL_DATABASE: 
+      MYSQL_USER: 
+      MYSQL_PASSWORD: 
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"   # host:container (use 3307 locally, FastAPI will still use 3306)
+    networks:
+      - internal-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-hmysql-db", "-umyuser", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
+
+networks:
+  internal-network:
+    driver: bridge
